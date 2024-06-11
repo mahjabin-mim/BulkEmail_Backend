@@ -1,9 +1,12 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsArray, IsEmail, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import Attachment from './attachment.dto';
 
 export class CreateEmailDto {
-  @IsEmail()
+  @IsArray()
+  @IsEmail({}, { each: true })
   @IsNotEmpty()
-  to: string;
+  to: string[];
 
   @IsString()
   subject: string;
@@ -11,4 +14,9 @@ export class CreateEmailDto {
   @IsString()
   @IsNotEmpty()
   body: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Attachment)
+  attachments: Attachment[];
 }
